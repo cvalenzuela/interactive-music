@@ -1,4 +1,4 @@
-# A Heuristic Manifiesto
+# A Heuristic Manifiesto
 
 Discover and learn by yourself.
 
