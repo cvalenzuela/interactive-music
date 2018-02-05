@@ -6,4 +6,4 @@ Assignment:
 
 ## Word2Music
 
-![score](score.png)
+![score](word2sound.png)
