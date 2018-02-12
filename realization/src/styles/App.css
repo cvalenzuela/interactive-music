@@ -1,0 +1,11 @@
+input{
+  margin: 20px;
+}
+
+.Input{
+  display: inline-block;
+}
+
+.Bar{
+  margin: 2rem;
+}
