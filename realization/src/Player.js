@@ -29,7 +29,6 @@ class Player {
   setNotes(notes) {
     this.pattern.stop();
     this.notes = notes;
-    console.log('new notes are', this.notes);
     this.pattern = new Tone.Pattern((time, note) => {
       this.synth.triggerAttackRelease(note, 0.1, time)
     }, this.notes , 'down')

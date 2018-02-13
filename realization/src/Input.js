@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
-import Bar from './Bar';
 import { map } from './utils';
 import Player from './Player';
+import { guid } from './utils';
 
 class Input extends Component {
   constructor(props){
@@ -54,6 +54,16 @@ class Input extends Component {
     }
   }
 
+  handleRemoveWord = (index) => {
+    const { words } = this.state;
+    words.splice(index, 1);
+    this.removeNote(index);
+    this.setState({
+      words
+    });
+    
+  }
+
   getDistanceBetweenLeadAndWord(input) {
     const { minValue, maxValue, leadWord, words } = this.state;
     const { w2v } = this.props;
@@ -63,14 +73,22 @@ class Input extends Component {
     words.push(input);
     this.setState({
       currentValue: '',
-      notValid: false
-    })
+      notValid: false,
+      words
+    });
     this.addNote(distance);
   }
 
-  addFirstNote(){
+  addFirstNote() {
     const { player } = this.state;
     player.start()
+  }
+
+  removeInstance = () => {
+    const { id, remove } = this.props;
+    const { player } = this.state;
+    player.stop()
+    remove(id);
   }
 
   addNote(distance) {
@@ -84,7 +102,13 @@ class Input extends Component {
     notes.push(player.AvailableNotes[note]);
     player.setNotes(notes);
     player.start();
-    console.log('note', note, player.AvailableNotes[note], notes)
+  }
+
+  removeNote(index){
+    const { player } = this.state;
+    const notes = player.notes;
+    notes.splice(index, 1);
+    player.setNotes(notes);
   }
 
   render() {
@@ -92,10 +116,18 @@ class Input extends Component {
 
     return (
       <div className="Input">
+
         <input type="text" onChange={this.handleInputChange} value={currentValue} />
-        <button onClick={this.handleAddWord}>Add Word</button>
-        <p>{ notValid ? 'Not a valid word' : null }</p>
-        <Bar words={words} className="Bar"/>
+
+        <button onClick={this.handleAddWord} className="AddWord">Add Word</button>
+        <button onClick={this.removeInstance} className="RemoveBar">Remove Bar</button>
+
+        <p className="MsgError">{ notValid ? 'Not a valid word' : null }</p>
+
+        <div className="Bar">
+          { words.map((word, index) => <p key={guid()}>{word}<button className="RemoveWord" onClick={() => this.handleRemoveWord(index)}>X</button></p>) }
+        </div>
+
       </div>
     );
   }

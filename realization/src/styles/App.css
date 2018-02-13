@@ -1,11 +1,103 @@
+* {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body{
+  font-family: 'Merriweather', serif;
+  background: #eeedec;
+}
+
+
+h2{
+  font-weight: lighter;
+  font-size: 4rem;
+  margin: 0px;
+}
+
+span{
+  font-weight: 700;
+}
+
 input{
-  margin: 20px;
+  margin: 0rem 0.5rem;
+  padding: 5px 8px;
+  border: none;
+  background: rgb(253, 253, 253);
+}
+
+button{
+  border: none;
+  padding: 4px 8px;
+  box-shadow: 0 4px 8px 0 rgba(109, 109, 109, 0.068), 0 6px 20px 0 rgba(85, 85, 85, 0.089);
+  background: rgba(245, 245, 245, 0.747);
+  margin: 0px 0.2rem;
+}
+
+button:hover{
+  transform: scale(1.02);
+}
+
+p{
+  margin: 0px;
+  padding: 0px;
+}
+
+*:focus {outline:none}
+
+.App{
+  margin: 4rem 10vw;
 }
 
 .Input{
-  display: inline-block;
+  display: inline-table;
 }
 
 .Bar{
-  margin: 2rem;
+  margin: 2rem 0.5rem;
+  background: rgba(209, 209, 209, 0.5);
+}
+
+.Bar p{
+  padding: 4px 6px;
+  color: rgb(46, 46, 46);
+}
+
+.AddBarBtn{
+  margin: 2rem 0.5rem;
+  padding: 6px 10px;
+  display: block;
+  background: rgb(100, 123, 223);
+  color:white;
+}
+
+.MsgError{
+  margin: 1rem;
+  font-size: 12px;
+  color: rgb(214, 77, 77);
+}
+
+.AddWord:hover{
+  background: rgb(35, 201, 201);
+  color: rgb(56, 56, 56);
+}
+
+.RemoveBar:hover{
+  background: rgb(201, 87, 87);
+  color: rgb(224, 224, 224);
+}
+
+.Loading{
+  text-align: center;
+  padding: 25vh 0px;
+}
+
+.Loading img{
+  width: 20vw;
+  margin: 0 auto;
+}
+
+.Loading p{
+  font-size: 1rem;
+  font-weight: lighter;
 }
