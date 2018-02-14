@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 
 import { map } from './utils';
-import Player from './Player';
+import Player, { files } from './Player';
 import { guid } from './utils';
 
 class Input extends Component {
@@ -15,8 +15,10 @@ class Input extends Component {
       furthest: '',
       nearest: '',
       words: [],
+      baseIndex: 0,
       notValid: false,
-      player: new Player()
+      player: new Player(),
+      speed: 2
     }
   }
 
@@ -25,14 +27,13 @@ class Input extends Component {
   }
 
   handleAddWord = () => {
-    const { words, currentValue, leadWord } = this.state;
+    const { words, currentValue, leadWord, player } = this.state;
     const { w2v } = this.props;
     
     const isValid = w2v.model.hasOwnProperty(currentValue);
-
     if(!isValid){
       this.setState({ notValid: true  });
-    } else if (isValid && leadWord === '') {
+    } else if (isValid && player.notes.length === 0) {
       const furthest = w2v.subtract([currentValue, currentValue], 2);
       const nearest = w2v.subtract([currentValue, furthest[0].vector], 2);
       const minValue = nearest[0].distance;
@@ -51,7 +52,13 @@ class Input extends Component {
        this.addFirstNote();
     } else {
       this.getDistanceBetweenLeadAndWord(currentValue)
+
     }
+  }
+
+  addFirstNote() {
+    const { player } = this.state;
+    player.start()
   }
 
   handleRemoveWord = (index) => {
@@ -61,7 +68,13 @@ class Input extends Component {
     this.setState({
       words
     });
-    
+  }
+
+  removeNote(index){
+    const { player } = this.state;
+    const notes = player.notes;
+    notes.splice(index, 1);
+    player.setNotes(notes);
   }
 
   getDistanceBetweenLeadAndWord(input) {
@@ -79,11 +92,6 @@ class Input extends Component {
     this.addNote(distance);
   }
 
-  addFirstNote() {
-    const { player } = this.state;
-    player.start()
-  }
-
   removeInstance = () => {
     const { id, remove } = this.props;
     const { player } = this.state;
@@ -95,37 +103,65 @@ class Input extends Component {
     const { player } = this.state;
     const notes = player.notes;
 
-    let note = parseInt(map(distance, 0, 1, player.AvailableNotes.length, 0));
-    if (note >= player.AvailableNotes.length){
-      note = player.AvailableNotes.length - 1;
+    let note = parseInt(map(distance, 0, 1, player.availableNotes.length, 0));
+    if (note >= player.availableNotes.length){
+      note = player.availableNotes.length - 1;
     }
-    notes.push(player.AvailableNotes[note]);
+    notes.push(player.availableNotes[note]);
     player.setNotes(notes);
-    player.start();
   }
 
-  removeNote(index){
+  handleEnter = (e) => {
+    if(e.key === 'Enter'){
+      this.handleAddWord();
+    }
+  }
+
+  handleChangeSpeed = (event) => {
+    const { speed, player } = this.state;
+    const newSpeed = event.target.value;
+    this.setState({ speed:  newSpeed });
+    player.setSpeed(newSpeed);
+  }
+
+  handleChangeBase = (baseIndex) => {
     const { player } = this.state;
-    const notes = player.notes;
-    notes.splice(index, 1);
-    player.setNotes(notes);
+    player.playNoteOnce(baseIndex);
+    player.setBase(baseIndex);
+    this.setState({
+      baseIndex
+    });
   }
 
   render() {
-    const { currentValue, words, notValid } = this.state;
+    const { currentValue, words, notValid, speed, baseIndex } = this.state;
 
     return (
       <div className="Input">
+        <ul>
+        {
+          files.map((file, i) => <li key={guid()}><button onClick={() => this.handleChangeBase(i)} className={baseIndex === i ?"BaseBtnSelected" : "BaseBtn"}>{i}</button></li> )
+        }
+        </ul>
+        <input type="range" value={speed} onChange={this.handleChangeSpeed} min="1" max="16" className="Slider"/>
 
-        <input type="text" onChange={this.handleInputChange} value={currentValue} />
-
+        <input type="text" onChange={this.handleInputChange} onKeyPress={this.handleEnter} value={currentValue} />
+  
         <button onClick={this.handleAddWord} className="AddWord">Add Word</button>
-        <button onClick={this.removeInstance} className="RemoveBar">Remove Bar</button>
-
+        <button onClick={this.removeInstance} className="RemoveBar"></button>
+        
         <p className="MsgError">{ notValid ? 'Not a valid word' : null }</p>
 
         <div className="Bar">
-          { words.map((word, index) => <p key={guid()}>{word}<button className="RemoveWord" onClick={() => this.handleRemoveWord(index)}>X</button></p>) }
+          { words.map((word, index) => {
+            return(
+              <div key={guid()}>
+                <p className={index === 0 ? 'BaseWord' : null}> {word} </p>
+                <button className="RemoveWord" onClick={() => this.handleRemoveWord(index)}></button>
+              </div>
+            )
+            }) 
+          }
         </div>
 
       </div>

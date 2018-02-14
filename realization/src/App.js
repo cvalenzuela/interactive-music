@@ -28,7 +28,6 @@ class App extends Component {
 
   handleRemoveInput = (uid) => {
     const { inputs } = this.state;
-    console.log('gotg here', uid)
     const newInputs = inputs.filter(i => {
       if(uid !== i){
         return i
@@ -54,6 +53,7 @@ class App extends Component {
           : 
           <div className="Main">
             <h2>w<span>2</span>m</h2>
+            <p className="Description">{/*sonifying word embeddings*/}</p>
             <button onClick={this.handleAddInput} className="AddBarBtn">Add Bar</button>
             {
               inputs.map(key => <Input w2v={w2v} key={key} id={key} remove={this.handleRemoveInput}/>)
