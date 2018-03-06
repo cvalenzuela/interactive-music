@@ -7,6 +7,9 @@ import {
 } from './constants';
 
 import SocketManager from './SocketManager';
+import Player from './Player';
+
+const player = new Player();
 
 let humans = [];
 let capture;
@@ -16,20 +19,25 @@ let colors;
 let socketManager;
 
 const setup = () => {
+  // Canvases
   canvas = createCanvas(windowWidth, windowHeight);
   canvas2Send = createGraphics(IMAGE_WIDTH, IMAGE_HEIGHT);
+
   // Live Stream
-  // capture = createCapture(VIDEO);
+  capture = createCapture(VIDEO);
 
   // Video Demo
-  capture = createVideo([VIDEOS.s2]);
-  capture.loop();
+  //capture = createVideo([VIDEOS.s2]);
+  //capture.loop();
+
+  // Socket Manager
   socketManager = new SocketManager('http://localhost:33000/query', capture, canvas2Send);
 
   capture.size(IMAGE_WIDTH, IMAGE_HEIGHT);
   capture.hide();
   strokeWeight(4);
   colors = COLORS.map(e => color(e));
+  player.play();
 }
 
 const draw = () => {
@@ -37,6 +45,10 @@ const draw = () => {
   // if (humans.length > 0) {
   //   humans.forEach(human => drawHuman(human));
   // }
+
+  noStroke();
+  fill(255,0,0);
+  ellipse(600, 300, 30, 30);
 }
 
 const drawHuman = (human) => {
@@ -53,7 +65,15 @@ const drawHuman = (human) => {
     });
     stroke(255, 255, 255);
     if (start && end) {
-      line(start[1] * windowWidth, start[2] * windowHeight, end[1] * windowWidth, end[2] * windowHeight);
+      const x1 = start[1] * windowWidth;
+      const y1 = start[2] * windowHeight;
+      const x2 = end[1] * windowWidth;
+      const y2 = end[2] * windowHeight;
+
+      if(x1 >= 570 && x1 <= 630 && y1 >= 270 && y1 <= 330 || x2 >= 570 && x2 <= 630 && y2 >= 270 && y2 <= 330) {
+        player.play();
+      }
+      line(x1, y1, x2, y2);
     }
   });
 }

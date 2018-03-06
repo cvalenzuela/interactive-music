@@ -14,7 +14,7 @@ class SocketManager {
 
     this.socket.on('update_response', (data) => {
       var humans = data.results.humans;
-      console.log(humans.length);
+
       image(capture, 0, 0, windowWidth, windowHeight);
       cnvs.image(capture, 0, 0, IMAGE_WIDTH, IMAGE_HEIGHT);
       if (humans.length > 0) {
