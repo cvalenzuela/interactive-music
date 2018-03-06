@@ -63,7 +63,6 @@ class Player {
       Tone.Transport.start()
     }
     if(!this.sampler) {
-      console.log('should be here again')
       this.sampler = new Tone.Sampler({
         'C4' : this.base,
         }, {

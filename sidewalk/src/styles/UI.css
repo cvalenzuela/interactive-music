@@ -1,0 +1,19 @@
+.UIButton{
+  border: none;
+  background: white;
+  border-radius: 50%;
+  padding: 0.7rem;
+  border: 2px solid rgba(14, 12, 12, 0.884);
+  display: inline-block;
+  margin: 0px 0px 0px 1rem;
+}
+
+.UIButton img{
+  width: 30px;
+  height: 30px;
+  display: inline;
+}
+
+.UIButton img:hover{
+  transform: scale(1.05);
+}
