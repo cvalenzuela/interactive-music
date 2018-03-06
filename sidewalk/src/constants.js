@@ -1,12 +1,16 @@
-const IMAGE_WIDTH = 432;
-const IMAGE_HEIGHT = 368;
+export const IMAGE_WIDTH = 432;
+export const IMAGE_HEIGHT = 368;
 
-const VIDEOS = {
+export const C_SIZE = 100;
+export const C_RADIUS = C_SIZE/2;
+export const FOOTER_HEIGHT = 100;
+
+export const VIDEOS = {
   s1: 'https://dl.dropbox.com/s/opd7cqrkfpjuog1/street01.mp4?dl=0',
-  s2: 'https://dl.dropbox.com/s/5iqookf3lj4i1zp/street02.mp4?dl=0'
+  s2: 'https://dl.dropbox.com/s/dvvldhk1u7btsnt/street03.mp4?dl=0'
 }
 
-const BODY_CONNECTIONS = [
+export const BODY_CONNECTIONS = [
   ['Nose', 'Left_Eye'],
   ['Left_Eye', 'Left_Ear'],
   ['Nose', 'Right_Eye'],
@@ -26,7 +30,7 @@ const BODY_CONNECTIONS = [
   ['Left_Knee', 'Left_Ankle'],
 ]
 
-const COLORS = [
+export const COLORS = [
   '#00ff00',
   '#ffff00',
   '#ff0000',
@@ -46,11 +50,3 @@ const COLORS = [
   '#ffff00',
   '#ff0000'
 ]
-
-export {
-  BODY_CONNECTIONS,
-  COLORS,
-  IMAGE_WIDTH,
-  IMAGE_HEIGHT,
-  VIDEOS
-}

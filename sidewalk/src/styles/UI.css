@@ -1,3 +1,8 @@
+.UI{
+  width: 100%;
+  margin: 1rem;
+}
+
 .UIButton{
   border: none;
   background: white;
@@ -8,12 +13,31 @@
   margin: 0px 0px 0px 1rem;
 }
 
-.UIButton img{
-  width: 30px;
-  height: 30px;
+.UI img{
+  width: 25px;
+  height: 25px;
   display: inline;
 }
 
-.UIButton img:hover{
+.UI img:hover{
   transform: scale(1.05);
+}
+
+.SoundButton{
+  border: none;
+  background: white;
+  border-radius: 50%;
+  padding: 0.7rem;
+  border: 2px solid rgba(14, 12, 12, 0.884);
+  display: inline-block;
+  margin: 0px 0px 0px 1rem;
+}
+
+.SoundsBtns{
+  float: right;
+  margin: 0px 1rem 0px 0px;
+}
+
+.ControlBtns{
+  float: left;
 }

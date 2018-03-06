@@ -1,7 +1,16 @@
 import Tone from 'tone';
 
 class Player {
-  constructor() {}
+  constructor() {
+    this.player = new Tone.Player({
+      "url" : "https://tonejs.github.io/examples/audio/505/kick.mp3",
+      "retrigger" : false
+    }).toMaster()
+  }
+
+  getState() {
+    return this.player.state;
+  }
 
   setNotes(notes) {}
 
@@ -10,15 +19,8 @@ class Player {
   }
 
   play() {
-
-    var player = new Tone.Player("https://tonejs.github.io/examples/audio/505/kick.mp3").toMaster()
-
-    Tone.Buffer.on('load', function() {
-      var now = Tone.now()
-      player.start(now)
-    })
-
-
+    this.player.start()
+    this.player
   }
 
 }
