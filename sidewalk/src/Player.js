@@ -1,28 +1,32 @@
 import Tone from 'tone';
 
-class Player {
-  constructor() {
-    this.player = new Tone.Player({
-      "url" : "https://tonejs.github.io/examples/audio/505/kick.mp3",
-      "retrigger" : false
-    }).toMaster()
-  }
+import * as soundFiles from './sounds';
 
-  getState() {
-    return this.player.state;
-  }
+// Load Sounds type A
+export const soundsA = [];
+Object.keys(soundFiles.soundsA).forEach(file => {
+  soundsA.push(new Tone.Player({
+    url: soundFiles.soundsA[file],
+    retrigger: false
+  }).toMaster())
+});
 
-  setNotes(notes) {}
+// Load Sounds type B
+export const soundsB = [];
+Object.keys(soundFiles.soundsB).forEach(file => {
+  soundsB.push(new Tone.Player({
+    url: soundFiles.soundsB[file],
+    retrigger: false
+  }).toMaster())
+});
 
-  setBase(index) {
-    this.base = files[index];
-  }
 
-  play() {
-    this.player.start()
-    this.player
-  }
+// Load the street sound
+const street = new Tone.Player({
+  url: soundFiles.nyc,
+  retrigger: false
+}).toMaster()
 
-}
-
-export default Player;
+street.loop = true;
+street.volume.value = -15;
+street.autostart = true;

@@ -11,13 +11,21 @@ import {
 
 import SocketManager from './SocketManager';
 import Triggers from './Triggers';
-import Player from './Player';
+import { soundsA, soundsB } from './Player';
 
-// Tone Player
-const player = new Player();
+import video01 from './video/street01.mp4'
+import video02 from './video/nyc.mp4'
+import video03 from './video/street03.mp4'
+
+const avaiVideos = [video01, video02, video03];
+
+// Current color
+let currentColor = 'rgba(37,255,245, 0.75)';
+// Current selected sound
+let currentSound = 'soundsA';
 
 // Circle Trigger Manager
-const triggers = new Triggers();
+export const triggers = new Triggers();
 
 let humans = [];
 let capture;
@@ -25,7 +33,7 @@ let canvas;
 let canvas2Send;
 let colors;
 let socketManager;
-let showVideo = false;
+let triggerTracking = false;
 
 const setup = () => {
   // Canvases
@@ -36,31 +44,32 @@ const setup = () => {
   // capture = createCapture(VIDEO);
 
   // Video Demo
-  capture = createVideo([VIDEOS.s2]);
-  capture.loop();
+  capture = createVideo([video02]);
 
   // Socket Manager
-  // socketManager = new SocketManager('http://184.72.77.138:33000/query', capture, canvas2Send);
+  socketManager = new SocketManager('http://localhost:33000/query', capture, canvas2Send);
 
   capture.size(IMAGE_WIDTH, IMAGE_HEIGHT);
   capture.hide();
   strokeWeight(4);
   colors = COLORS.map(e => color(e));
+  frameRate(10);
 }
 
 const draw = () => {
-  if (showVideo) {
+  //image(capture, 0, 0, windowWidth, windowHeight);
+  if (playVideo && !isTracking) {
     image(capture, 0, 0, windowWidth, windowHeight);
   }
 
   noStroke();
-  fill(255, 0, 0);
+  fill(currentColor);
 
   // Draw all triggers
   triggers.getAll().forEach(trigger => ellipse(trigger.x, trigger.y, C_SIZE))
 
-  // Debug with mouse
-  //checkAndTriggerSound(mouseX, mouseY, mouseX, mouseY);
+  // Debug sounds with mouse
+  checkAndTriggerSound(mouseX, mouseY, mouseX, mouseY);
 }
 
 // Draw a human
@@ -76,7 +85,7 @@ const drawHuman = (human) => {
         end = bodyPart;
       }
     });
-    stroke(255, 255, 255);
+    stroke('rgba(87,255,245, 0.75)');
     if (start && end) {
       const x1 = start[1] * windowWidth;
       const y1 = start[2] * windowHeight;
@@ -106,7 +115,7 @@ const mousePressed = () => {
       x2: mouseX + C_RADIUS,
       y1: mouseY - C_RADIUS,
       y2: mouseY + C_RADIUS,
-      part: 'head'
+      soundType: currentSound
     })
   }
 }
@@ -115,9 +124,18 @@ const mousePressed = () => {
 const checkAndTriggerSound = (x1, y1, x2, y2) => {
   triggers.getAll().forEach(t => {
     if (x1 >= t.x1 && x1 <= t.x2 && y1 >= t.y1 && y1 <= t.y2 || x2 >= t.x1 && x2 <= t.x2 && y2 >= t.y1 && y2 <= t.y2) {
-      if (player.getState() === 'stopped') {
-        player.play();
+      if(t.soundType === 'soundsA'){
+        const i = Math.floor(map(y1, 0, windowHeight, soundsA.length - 1, 0));
+        if (soundsA[i].state === 'stopped') {
+          soundsA[i].start();
+        }
+      } else if(t.soundType === 'soundsB') {
+        const i = Math.floor(map(y1, 0, windowHeight, soundsB.length - 1, 0));
+        if (soundsB[i].state === 'stopped') {
+          soundsB[i].start();
+        }
       }
+
     }
   })
 }
@@ -133,15 +151,40 @@ const checkIfOverTrigger = (x, y) => {
   return trigger;
 }
 
+let playVideo = false;
 // Show the raw video stream
 export const showRawVideo = () => {
-  showVideo = !showVideo;
+  playVideo = !playVideo;
+  if(playVideo){
+    capture.loop()
+  } else {
+    capture.pause();
+  }
+}
+
+export let isTracking = false;
+// Start Tracking the current video
+export const trackVideo = () => {
+  isTracking = !isTracking;
+  if(isTracking){
+    start()
+  }  
 }
 
 // Log start
 const start = () => {
-  console.log('sending new image', Date.now());
-  socketManager.sendImg(canvas2Send.elt.toDataURL());
+  socketManager.sendImg(canvas2Send.elt.toDataURL(), capture, canvas2Send);
+}
+
+// Change the video src
+export const changeVideo = () => {
+  const video = avaiVideos[Math.floor(random(0, avaiVideos.length))];
+  capture.elt.src = video;
+}
+
+// Change the sound and color
+export const changeSound = (type) => {
+  currentSound = type;
 }
 
 window.setup = setup;
